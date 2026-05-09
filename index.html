@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>送给最爱的妈妈 💐</title>
+    <style>
+        /* 背景：柔和渐变 + 可选背景图 */
+        
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('https://images.pexels.com/photos/1337380/pexels-photo-1337380.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1') center/cover fixed no-repeat;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            color: #5a3e36;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+        
+        .container {
+            max-width: 800px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(5px);
+        }
+        
+        h1 {
+            font-size: 2.8em;
+            color: #d43c7a;
+            margin-bottom: 25px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        /* 打字机效果容器 */
+        
+        #typewriter {
+            font-size: 1.5em;
+            line-height: 1.7;
+            margin: 20px 0;
+            min-height: 120px;
+            color: #4a4a4a;
+        }
+        
+        .photo-carousel {
+            width: 240px;
+            height: 240px;
+            margin: 20px auto;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+        
+        .heart {
+            font-size: 3.2em;
+            color: #e91e63;
+            cursor: pointer;
+            user-select: none;
+            margin: 20px 0;
+            transition: transform 0.2s;
+        }
+        
+        .heart:hover {
+            transform: scale(1.15);
+        }
+        
+        .fullscreen-tip {
+            position: fixed;
+            bottom: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.95em;
+            display: none;
+        }
+        
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.2em;
+            }
+            #typewriter {
+                font-size: 1.3em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>💐 妈妈，母亲节快乐！</h1>
+
+
+
+        <!-- 打字机文字 -->
+        <div id="typewriter"></div>
+
+        <!-- 爱心互动 -->
+        <div class="heart" id="heart">❤️</div>
+    </div>
+
+    <!-- 全屏提示 -->
+    <div class="fullscreen-tip" id="fullscreenTip">
+        💡 提示：按键盘 F11 键可全屏观看哦！
+    </div>
+
+
+
+    <script>
+        // === 1. 打字机效果 ===
+        const messages = [
+            "亲爱的妈妈：",
+            "今天是母亲节",
+            "看见桌子上那朵花了吗？",
+            "快，去拿起它\n 这个是属于你的\n 浪漫",
+            "妈妈\n节日快乐",
+        ];
+
+        const typewriter = document.getElementById('typewriter');
+        let msgIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function type() {
+            const currentMsg = messages[msgIndex];
+            if (!isDeleting) {
+                // 打字
+                typewriter.innerText = currentMsg.substring(0, charIndex + 1);
+                charIndex++;
+                if (charIndex === currentMsg.length) {
+                    isDeleting = true;
+                    setTimeout(type, 2000); // 停顿2秒再删
+                    return;
+                }
+            } else {
+                // 删除
+                typewriter.innerText = currentMsg.substring(0, charIndex - 1);
+                charIndex--;
+                if (charIndex === 0) {
+                    isDeleting = false;
+                    msgIndex = (msgIndex + 1) % messages.length;
+                }
+            }
+            setTimeout(type, isDeleting ? 80 : 100);
+        }
+        type();
+
+        // === 2. 爱心点击放烟花（简化版）===
+        document.getElementById('heart').addEventListener('click', () => {
+            for (let i = 0; i < 30; i++) {
+                const spark = document.createElement('div');
+                spark.innerText = '✨';
+                spark.style.position = 'fixed';
+                spark.style.fontSize = Math.random() * 20 + 10 + 'px';
+                spark.style.left = '50%';
+                spark.style.top = '50%';
+                spark.style.color = ['#ff6b6b', '#4ecdc4', '#ffd166', '#a5d8ff'][Math.floor(Math.random() * 4)];
+                spark.style.pointerEvents = 'none';
+                spark.style.zIndex = 9999;
+                spark.style.animation = `spark ${0.8 + Math.random()}s ease-out forwards`;
+                document.body.appendChild(spark);
+
+                // 添加动画关键帧（首次点击时注入）
+                if (!document.getElementById('spark-style')) {
+                    const style = document.createElement('style');
+                    style.id = 'spark-style';
+                    style.innerHTML = `
+            @keyframes spark {
+              0% { transform: translate(0, 0) scale(1); opacity: 1; }
+              100% { 
+                transform: translate(${(Math.random()-0.5)*300}px, ${(Math.random()-0.5)*300}px) scale(0); 
+                opacity: 0; 
+              }
+            }
+          `;
+                    document.head.appendChild(style);
+                }
+
+                // 自动清理
+                setTimeout(() => spark.remove(), 1500);
+            }
+        });
+
+
+        window.addEventListener('load', checkFullscreen);
+        window.addEventListener('resize', checkFullscreen);
+    </script>
+</body>
+
+</html>
